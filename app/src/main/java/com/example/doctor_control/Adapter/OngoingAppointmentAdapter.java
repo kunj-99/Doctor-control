@@ -5,13 +5,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.doctor_control.Model.Appointment;
 import com.example.doctor_control.R;
-
 import java.util.List;
 
 public class OngoingAppointmentAdapter extends RecyclerView.Adapter<OngoingAppointmentAdapter.ViewHolder> {
@@ -22,6 +19,7 @@ public class OngoingAppointmentAdapter extends RecyclerView.Adapter<OngoingAppoi
     public interface OnAppointmentActionListener {
         void onCancelAppointment(int position);
         void onCompleteAppointment(int position);
+        void onAppointmentClick(int position); // Add this method
     }
 
     public OngoingAppointmentAdapter(List<Appointment> appointments, OnAppointmentActionListener listener) {
@@ -37,16 +35,30 @@ public class OngoingAppointmentAdapter extends RecyclerView.Adapter<OngoingAppoi
         return new ViewHolder(view);
     }
 
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Appointment appointment = appointments.get(position);
-
         holder.tvPatientName.setText(appointment.getPatientName());
         holder.tvProblem.setText(appointment.getProblem());
 
-        holder.btnCancel.setOnClickListener(v -> listener.onCancelAppointment(position));
-        holder.btnComplete.setOnClickListener(v -> listener.onCompleteAppointment(position));
+        // Set click listener for the entire item
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onAppointmentClick(position);
+            }
+        });
+
+        holder.btnCancel.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onCancelAppointment(position);
+            }
+        });
+
+        holder.btnComplete.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onCompleteAppointment(position);
+            }
+        });
     }
 
     @Override
@@ -55,10 +67,10 @@ public class OngoingAppointmentAdapter extends RecyclerView.Adapter<OngoingAppoi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvPatientName, tvProblem;
-        Button btnCancel, btnComplete;
+        public TextView tvPatientName, tvProblem;
+        public Button btnCancel, btnComplete;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
             tvPatientName = itemView.findViewById(R.id.tv_patient_name);
             tvProblem = itemView.findViewById(R.id.tv_problem);

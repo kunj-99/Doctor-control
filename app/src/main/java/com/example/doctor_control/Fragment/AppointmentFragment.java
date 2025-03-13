@@ -2,6 +2,7 @@ package com.example.doctor_control.Fragment;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,9 +35,10 @@ public class AppointmentFragment extends Fragment implements OngoingAppointmentA
         List<Appointment> appointments = new ArrayList<>();
         appointments.add(new Appointment("John Doe", "Fever & Headache"));
         appointments.add(new Appointment("Jane Smith", "Back Pain"));
-        appointments.add(new Appointment("Jane Smith", "facture"));
-        appointments.add(new Appointment("Jane Smith", "corona"));
-        appointments.add(new Appointment("Jane Smith", "dengue"));
+        appointments.add(new Appointment("Jane Smith", "Fracture"));
+        appointments.add(new Appointment("Jane Smith", "Corona"));
+        appointments.add(new Appointment("Jane Smith", "Dengue"));
+
         adapter = new OngoingAppointmentAdapter(appointments, this);
         rvOngoingAppointments.setAdapter(adapter);
 
@@ -53,6 +55,22 @@ public class AppointmentFragment extends Fragment implements OngoingAppointmentA
     public void onCompleteAppointment(int position) {
         // Handle complete action
         showCompleteConfirmationDialog(position);
+    }
+
+    @Override
+    public void onAppointmentClick(int position) {
+        // Handle appointment click
+        Appointment selectedAppointment = adapter.appointments.get(position);
+        navigateToMedicineReportForm(selectedAppointment);
+    }
+
+    private void navigateToMedicineReportForm(Appointment appointment) {
+        // Navigate to MedicineReportFormFragment with the selected appointment
+        fragment_medicine_report_form medicineReportFormFragment = new fragment_medicine_report_form(appointment);
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, medicineReportFormFragment)
+                .addToBackStack(null) // Add to back stack for back navigation
+                .commit();
     }
 
     private void showCancelConfirmationDialog(int position) {

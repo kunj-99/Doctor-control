@@ -39,7 +39,20 @@ public class ProfileFragment extends Fragment {
             Toast.makeText(getContext(), "Logout Clicked", Toast.LENGTH_SHORT).show();
             // Handle logout logic
         });
-
+        btnEditProfile.setOnClickListener(v -> {
+            // Navigate to edit profile page
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new fragment_edit_profile())
+                    .addToBackStack(null)
+                    .commit();
+        });
+        btnChangePassword.setOnClickListener(v -> {
+            // Navigate to change password page
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new fragment_change_password())
+                    .addToBackStack(null)
+                    .commit();
+        });
         return view;
     }
 }
